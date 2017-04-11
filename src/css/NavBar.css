@@ -1,0 +1,12 @@
+.Nav {
+  background-color: white;
+  height: 80px;
+  padding: 20px;
+  color: black;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  border-bottom-width:2px;
+  border-bottom-color:gray;
+  border-bottom-style: solid;  
+}
