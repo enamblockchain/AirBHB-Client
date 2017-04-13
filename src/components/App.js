@@ -1,8 +1,12 @@
 import React, {Component} from 'react'
+import { connect } from 'react-redux';
+
 import {Link} from 'react-router'
 import AppBar from 'material-ui/AppBar'
 import Drawer from 'material-ui/Drawer'
 import MenuItem from 'material-ui/MenuItem'
+
+import restClient from '../rest/RestClient';
 
 /*import RaisedButton from 'material-ui/RaisedButton'
 <RaisedButton label="Toggle Drawer" onTouchTap={this.toggleDrawer}/>*/
@@ -12,8 +16,7 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      open: false,
-      isLogged: true
+      open: false,      
     }
     
   }
@@ -25,11 +28,25 @@ class App extends Component {
   handleClose(e) {
     console.log(e.target);
     this.setState({open: false});
+    
   }
 
-  render() {
+  _logOut(e) {
+    console.log(e.target);
+    this.setState({open: false});
+    this.props.data.isLogged = false;
+    localStorage.setItem('email', null)
+  }  
 
-    const menuItems=this.state.isLogged ? (
+  render() {
+    
+    //console.log(this.props.data.isLogged);
+      //console.log(restClient.loggedIn());
+        if(restClient.loggedIn()){          
+          this.props.data.isLogged = true;
+        }
+
+    const menuItems = this.props.data.isLogged ? (
       <div>
 
           <MenuItem 
@@ -69,6 +86,14 @@ class App extends Component {
             .bind(this)}
             primaryText="About"
             containerElement={< Link to="/about" />}/>
+
+          <MenuItem
+            key="8"
+            onTouchTap={this
+            ._logOut
+            .bind(this)}
+            primaryText="Logout"
+            containerElement={< Link to="/experts" />}/>
 
       </div>
     ):(
@@ -140,4 +165,13 @@ class App extends Component {
   }
 }
 
-export default App
+//export default App
+// Which props do we want to inject, given the global state?
+function select(state) {
+  return {
+    data: state
+  };
+}
+
+// Wrap the component to inject dispatch and state into it
+export default connect(select)(App);
